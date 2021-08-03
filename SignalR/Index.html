@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="/Scripts/jquery-3.0.0.min.js"></script>
+    <script src="/Scripts/jquery.signalR-2.4.1.min.js"></script>
+    <script src="/signalr/hubs"></script>
+    <link href="/Content/bootstrap.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <h2>Char Room...</h2>
+        <hr />
+        <input type="hidden" id="displayName" />
+        <textarea class="form-control" id="message" cols="60" rows="8"></textarea>
+        <p>
+            <input id="btnSend" type="button" class="btn btn-success" value="Send" />
+        </p>
+        <ul id="chats"></ul>
+
+        <script>
+            $(function () {
+                $("#displayName").val(prompt("Please Enter Name : ", "Guest"));
+                $("#message").focus();
+
+                var chat = $.connection.chatHub;
+                $.connection.hub.start().done(function () {
+                    //alert($.connection.hub.id); connectionString
+                    chat.server.send($("#displayName").val(), "Logged In ...");
+                    $("#btnSend").click(function () {
+                        chat.server.send($("#displayName").val(), $("#message").val());
+                        $("#message").val("").focus();
+                    });
+                });
+                chat.client.addNewMessage = function (name, message) {
+                    $("#chats").append("<li><strong> " + name + " :</strong>" + message + "</li>");
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>
