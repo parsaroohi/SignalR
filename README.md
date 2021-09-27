@@ -1,2 +1,2 @@
-# SignlaR
+# SignalR
 create a simple chat room using asp.net signalR
